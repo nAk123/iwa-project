@@ -14,11 +14,10 @@ import twitter4j.internal.org.json.JSONObject;
  */
 public class TweetUtils {
 
-    public static String parseText(String tweet) throws JSONException {
+    public static JSONObject parseText(String tweet) throws JSONException {
         JSONObject json = new JSONObject(tweet);
 
         JSONObject jsonText = json.getJSONObject("text");
-        String text = jsonText.getString("text");
-        return text;
+        return jsonText;
     }
 }
