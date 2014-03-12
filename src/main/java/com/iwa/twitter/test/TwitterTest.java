@@ -25,6 +25,8 @@ import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 import twitter4j.conf.Configuration;
 import twitter4j.conf.ConfigurationBuilder;
+import twitter4j.internal.org.json.JSONException;
+import twitter4j.internal.org.json.JSONObject;
 
 import com.google.common.collect.Lists;
 import com.twitter.hbc.ClientBuilder;
@@ -65,7 +67,7 @@ public class TwitterTest {
 	public static void streaming(String... track) throws InterruptedException {
 		BlockingQueue<String> queue = new LinkedBlockingQueue<String>(10000);
 		StatusesFilterEndpoint endpoint = new StatusesFilterEndpoint();
-		
+
 		// add some track terms
 		endpoint.trackTerms(Lists.newArrayList(track));
 
@@ -106,18 +108,29 @@ public class TwitterTest {
 		return trendNames;
 	}
 
+	private static String parseText(String tweet) throws JSONException {
+		JSONObject json = new JSONObject(tweet);
+
+		JSONObject jsonText = json.getJSONObject("text");
+		String text = jsonText.getString("text");
+		return text;
+	}
+
 	public static void main(String[] args) {
 		try {
-			streaming("brazil", "india", "france");
+			// This thing blocks
+			streaming("football", "volleyball", "basketball");
 			
-			List<String> trendingTopics = getTrendsByWoeid(455831);
-			
+			List<String> trendingTopics = getTrendsByWoeid(1);
+
 			for (String tweet : trendingTopics) {
-				System.out.println(tweet);
+				System.out.println(parseText(tweet));
 			}
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		} catch (TwitterException e) {
+			e.printStackTrace();
+		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 	}
