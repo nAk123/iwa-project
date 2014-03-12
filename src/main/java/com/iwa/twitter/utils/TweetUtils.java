@@ -15,9 +15,6 @@ import twitter4j.internal.org.json.JSONObject;
 public class TweetUtils {
 
     public static JSONObject parseText(String tweet) throws JSONException {
-        JSONObject json = new JSONObject(tweet);
-
-        JSONObject jsonText = json.getJSONObject("text");
-        return jsonText;
+        return new JSONObject(tweet).getJSONObject("text");
     }
 }
